@@ -4,20 +4,13 @@
     "type": "module"
   },
   "manifest_version": 3,
-  "name": "AI NoteMaker",
+  "name": "Historical Data Generator",
   "content_scripts": [
-    {
-      "matches": ["*://mail.google.com/*"],
-      "js": ["js/webcomponents-sd-ce.js","js/jquery-3.6.4.min.js","gpt-connector.js","gmail/prompt_entry_handler.js","common_content.js"],
-      "css": ["css/gpt_content.css"]
-    },
+    
     {
       "matches": ["<all_urls>"],
-      "js": ["js/webcomponents-sd-ce.js","js/jquery-3.6.4.min.js","gpt-connector.js","prompt_entry_handler.js","common_content.js"],
-      "css": ["css/gpt_content.css"],
-      "exclude_matches": [
-        "*://mail.google.com/*"
-      ]
+      "js": ["js/starter.js"],
+      "css": []
     }
   ],
   "icons": {
@@ -34,7 +27,7 @@
   ],
   "action": {
     "browser_style": true,
-    "default_title": "AI NoteMaker",
+    "default_title": "Historical Data Generator",
     "default_popup": "popup.html"
   },
   "version": "0.003"
