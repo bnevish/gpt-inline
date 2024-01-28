@@ -1,15 +1,5 @@
 console.log("starter.js is running");
 
-document.addEventListener("mouseup", function() {
-    var highlightedText = getHighlightedText();
-    if (highlightedText) {
-        console.log("Highlighted Text: " + highlightedText);
-        // You can do whatever you want with the highlighted text here
-    } else {
-        console.log("No text is highlighted.");
-    }
-});
-
 function getHighlightedText() {
     var text = "";
     if (window.getSelection) {
@@ -23,3 +13,44 @@ function getHighlightedText() {
     return text;
 }
 
+function getDictionaryMeaning(text) {
+    // Replace 'YOUR_API_KEY' with your actual GPT-3 API key
+    const apiKey = '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';
+    const apiUrl = 'https://api.openai.com/v1/engines/davinci-codex/completions';  // Adjust the endpoint as per GPT-3 documentation
+
+    // Construct the request payload
+    const payload = {
+        prompt: `Define: ${text}`,
+        max_tokens: 50,  // Adjust as needed
+        n: 1  // Number of completions
+        // Add other parameters based on GPT-3 documentation
+    };
+
+    // Make the API request
+    fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`
+        },
+        body: JSON.stringify(payload)
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Handle the response from GPT-3
+        const generatedText = data.choices[0].text;
+        console.log("Generated Text: " + generatedText);
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+// Example usage
+document.addEventListener("mouseup", function() {
+    var highlightedText = getHighlightedText();
+    if (highlightedText) {
+        console.log("Highlighted Text: " + highlightedText);
+        getDictionaryMeaning(highlightedText);
+    } else {
+        console.log("No text is highlighted.");
+    }
+});
