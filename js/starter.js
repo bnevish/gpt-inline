@@ -1,3 +1,5 @@
+console.log("starter.js is running");
+
 document.addEventListener("mouseup", function() {
     var highlightedText = getHighlightedText();
     if (highlightedText) {
