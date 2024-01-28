@@ -15,7 +15,7 @@ function getHighlightedText() {
 
 function getDictionaryMeaning(text) {
     // Replace 'YOUR_API_KEY' with your actual GPT-3 API key
-    const apiKey = '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';
+    const apiKey = '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';
     const apiUrl = 'https://api.openai.com/v1/engines/davinci-codex/completions';  // Adjust the endpoint as per GPT-3 documentation
 
     // Construct the request payload
