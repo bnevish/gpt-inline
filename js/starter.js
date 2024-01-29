@@ -14,19 +14,15 @@ function getHighlightedText() {
 }
 
 function getDictionaryMeaning(text) {
-    // Replace 'YOUR_API_KEY' with your actual GPT-3 API key
     const apiKey = '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';
-    const apiUrl = 'https://api.openai.com/v1/engines/davinci-codex/completions';  // Adjust the endpoint as per GPT-3 documentation
+    const apiUrl = 'https://api.openai.com/v1/engines/davinci-codex/completions';
 
-    // Construct the request payload
     const payload = {
         prompt: `Define: ${text}`,
-        max_tokens: 50,  // Adjust as needed
-        n: 1  // Number of completions
-        // Add other parameters based on GPT-3 documentation
+        max_tokens: 50,
+        n: 1
     };
 
-    // Make the API request
     fetch(apiUrl, {
         method: 'POST',
         headers: {
@@ -37,14 +33,12 @@ function getDictionaryMeaning(text) {
     })
     .then(response => response.json())
     .then(data => {
-        // Handle the response from GPT-3
         const generatedText = data.choices[0].text;
         console.log("Generated Text: " + generatedText);
     })
     .catch(error => console.error('Error:', error));
 }
 
-// Example usage
 document.addEventListener("mouseup", function() {
     var highlightedText = getHighlightedText();
     if (highlightedText) {
