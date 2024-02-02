@@ -1,16 +1,16 @@
 console.log("starter.js is running good as usual");
 
 function getHighlightedText() {
-    var text = "";
+    var highlightedText = "";
     if (window.getSelection) {
         var selection = window.getSelection();
         if (selection && selection.toString()) {
-            text = selection.toString();
+            highlightedText = selection.toString();
         }
     } else if (document.selection && document.selection.type != "Control") {
-        text = document.selection.createRange().text;
+        highlightedText = document.selection.createRange().text;
     }
-    return text;
+    return highlightedText;
 }
 
 function getDictionaryMeaningAndHistoricalData(highlightedText) {
@@ -43,8 +43,8 @@ function getDictionaryMeaningAndHistoricalData(highlightedText) {
         body: JSON.stringify(dictionaryMeaningPayload)
     })
     .then(response => response.json())
-    .then(data => {
-        console.log("Dictionary Meaning:", data.choices[0].message.content);
+    .then(dictionaryMeaningData => {
+        console.log("Dictionary Meaning:", dictionaryMeaningData.choices[0].message.content);
 
         return fetch(apiUrl, {
             method: 'POST',
@@ -56,8 +56,8 @@ function getDictionaryMeaningAndHistoricalData(highlightedText) {
         });
     })
     .then(response => response.json())
-    .then(data => {
-        console.log("Historical Data:", data.choices[0].message.content);
+    .then(historicalData => {
+        console.log("Historical Data:", historicalData.choices[0].message.content);
     })
     .catch(error => console.error('Error:', error));
 }
@@ -66,7 +66,7 @@ document.addEventListener("mouseup", function() {
     var highlightedText = getHighlightedText();
     if (highlightedText) {
         console.log("Highlighted Text: " + highlightedText);
-        getDictionaryMeaning(highlightedText);
+        getDictionaryMeaningAndHistoricalData(highlightedText);
     } else {
         console.log("No text is highlighted.");
     }
