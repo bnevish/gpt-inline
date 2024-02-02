@@ -13,7 +13,7 @@ function getHighlightedText() {
     return highlightedText;
 }
 
-function getDictionaryMeaningAndHistoricalData(highlightedText) {
+function getDictionaryMeaning(highlightedText) {
     const apiKey = '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';
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
 
@@ -22,14 +22,6 @@ function getDictionaryMeaningAndHistoricalData(highlightedText) {
         messages: [
             { role: 'user', content: highlightedText },
             { role: 'assistant', content: 'What is the dictionary meaning of the highlighted text?' },
-        ],
-        temperature: 0.7,
-    };
-
-    const historicalDataPayload = {
-        model: 'gpt-3.5-turbo',
-        messages: [
-            { role: 'user', content: 'Tell me about the historical data of India.' },
         ],
         temperature: 0.7,
     };
@@ -45,15 +37,29 @@ function getDictionaryMeaningAndHistoricalData(highlightedText) {
     .then(response => response.json())
     .then(dictionaryMeaningData => {
         console.log("Dictionary Meaning:", dictionaryMeaningData.choices[0].message.content);
+    })
+    .catch(error => console.error('Error:', error));
+}
 
-        return fetch(apiUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${apiKey}`
-            },
-            body: JSON.stringify(historicalDataPayload)
-        });
+function getHistoricalData() {
+    const apiKey = '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';
+    const apiUrl = 'https://api.openai.com/v1/chat/completions';
+
+    const historicalDataPayload = {
+        model: 'gpt-3.5-turbo',
+        messages: [
+            { role: 'user', content: 'Tell me about the historical data of India.' },
+        ],
+        temperature: 0.7,
+    };
+
+    fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`
+        },
+        body: JSON.stringify(historicalDataPayload)
     })
     .then(response => response.json())
     .then(historicalData => {
@@ -66,7 +72,8 @@ document.addEventListener("mouseup", function() {
     var highlightedText = getHighlightedText();
     if (highlightedText) {
         console.log("Highlighted Text: " + highlightedText);
-        getDictionaryMeaningAndHistoricalData(highlightedText);
+        getDictionaryMeaning(highlightedText);
+        getHistoricalData();
     } else {
         console.log("No text is highlighted.");
     }
