@@ -42,7 +42,7 @@ function getDictionaryMeaning(highlightedText) {
 }
 
 function getHistoricalData() {
-    const apiKey = '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';
+    const apiKey = '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';
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
 
     const historicalDataPayload = {
