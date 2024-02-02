@@ -106,6 +106,7 @@ function getCustomResult(highlightedText) {
         if (userInput !== null) {
             if (userInput.toLowerCase() !== 'end') {
                 userContext = userInput;
+                console.log("User context set:", userContext);
                 fetchCustomResult();
             } else {
                 console.log("User ended the process.");
