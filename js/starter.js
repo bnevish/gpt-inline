@@ -13,14 +13,23 @@ function getHighlightedText() {
     return text;
 }
 
-function getDictionaryMeaning(text) {
+function getDictionaryMeaningAndHistoricalData(highlightedText) {
     const apiKey = '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';
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
 
-    const payload = {
+    const dictionaryMeaningPayload = {
         model: 'gpt-3.5-turbo',
         messages: [
-            { role: 'user', content: text },
+            { role: 'user', content: highlightedText },
+            { role: 'assistant', content: 'What is the dictionary meaning of the highlighted text?' },
+        ],
+        temperature: 0.7,
+    };
+
+    const historicalDataPayload = {
+        model: 'gpt-3.5-turbo',
+        messages: [
+            { role: 'user', content: 'Tell me about the historical data of India.' },
         ],
         temperature: 0.7,
     };
@@ -31,28 +40,27 @@ function getDictionaryMeaning(text) {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${apiKey}`
         },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(dictionaryMeaningPayload)
     })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        return response.json();
-    })
+    .then(response => response.json())
     .then(data => {
-        console.log("API Response:", data);
+        console.log("Dictionary Meaning:", data.choices[0].message.content);
 
-        const choices = data.choices;
-        if (choices && choices.length > 0) {
-            const generatedText = choices[0].message.content;
-            console.log("Generated Text: " + generatedText);
-        } else {
-            console.log("No valid response choices from the server.");
-        }
+        return fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${apiKey}`
+            },
+            body: JSON.stringify(historicalDataPayload)
+        });
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("Historical Data:", data.choices[0].message.content);
     })
     .catch(error => console.error('Error:', error));
 }
-
 
 document.addEventListener("mouseup", function() {
     var highlightedText = getHighlightedText();
