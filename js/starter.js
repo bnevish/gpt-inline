@@ -20,7 +20,7 @@ function getDictionaryMeaning(text) {
     const payload = {
         model: 'gpt-3.5-turbo',
         messages: [
-            { role: 'user', content: 'india' },
+            { role: 'user', content: text },
         ],
         temperature: 0.7,
     };
@@ -33,10 +33,20 @@ function getDictionaryMeaning(text) {
         },
         body: JSON.stringify(payload)
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+    })
     .then(data => {
-        const generatedText = data.choices[0].text;
-        console.log("Generated Text: " + generatedText);
+        const choices = data.choices;
+        if (choices && choices.length > 0) {
+            const generatedText = choices[0].text;
+            console.log("Generated Text: " + generatedText);
+        } else {
+            console.log("No valid response choices from the server.");
+        }
     })
     .catch(error => console.error('Error:', error));
 }
