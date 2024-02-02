@@ -40,11 +40,11 @@ function getDictionaryMeaning(text) {
         return response.json();
     })
     .then(data => {
-        console.log("API Response:", data); // Log the entire API response for inspection
+        console.log("API Response:", data);
 
         const choices = data.choices;
         if (choices && choices.length > 0) {
-            const generatedText = choices[0].text;
+            const generatedText = choices[0].message.content;
             console.log("Generated Text: " + generatedText);
         } else {
             console.log("No valid response choices from the server.");
@@ -52,6 +52,7 @@ function getDictionaryMeaning(text) {
     })
     .catch(error => console.error('Error:', error));
 }
+
 
 document.addEventListener("mouseup", function() {
     var highlightedText = getHighlightedText();
