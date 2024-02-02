@@ -18,9 +18,9 @@ function getDictionaryMeaning(text) {
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
 
     const payload = {
+        model: 'gpt-3.5-turbo',
         prompt: `Define: ${text}`,
-        max_tokens: 50,
-        n: 1
+        temperature: 0.7,
     };
 
     fetch(apiUrl, {
