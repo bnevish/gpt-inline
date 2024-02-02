@@ -74,7 +74,7 @@ document.addEventListener("mouseup", function() {
     if (highlightedText) {
         console.log("Highlighted Text: " + highlightedText);
         getDictionaryMeaning(highlightedText);
-        getHistoricalData();
+        getHistoricalData(highlightedText);
     } else {
         console.log("No text is highlighted.");
     }
