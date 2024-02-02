@@ -19,8 +19,9 @@ function getDictionaryMeaning(text) {
 
     const payload = {
         model: 'gpt-3.5-turbo',
-        prompt:  `Define: ${text}`,
-        
+        messages: [
+            { role: 'user', content: text },
+        ],
     };
 
     fetch(apiUrl, {
