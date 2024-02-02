@@ -40,6 +40,8 @@ function getDictionaryMeaning(text) {
         return response.json();
     })
     .then(data => {
+        console.log("API Response:", data); // Log the entire API response for inspection
+
         const choices = data.choices;
         if (choices && choices.length > 0) {
             const generatedText = choices[0].text;
