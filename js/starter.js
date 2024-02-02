@@ -1,4 +1,4 @@
-console.log("starter.js is running good as usual");
+let userContext = null;
 
 function getHighlightedText() {
     var highlightedText = "";
@@ -37,6 +37,7 @@ function getDictionaryMeaning(highlightedText) {
     .then(response => response.json())
     .then(dictionaryMeaningData => {
         console.log("Dictionary Meaning:", dictionaryMeaningData.choices[0].message.content);
+        getHistoricalData(highlightedText);
     })
     .catch(error => console.error('Error:', error));
 }
@@ -65,8 +66,48 @@ function getHistoricalData(highlightedText) {
     .then(response => response.json())
     .then(historicalData => {
         console.log("Historical Data:", historicalData.choices[0].message.content);
+        showUserContextPrompt(highlightedText);
     })
     .catch(error => console.error('Error:', error));
+}
+
+function getCustomResult(highlightedText, userContext) {
+    const apiKey = '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';
+    const apiUrl = 'https://api.openai.com/v1/chat/completions';
+
+    const customResultPayload = {
+        model: 'gpt-3.5-turbo',
+        messages: [
+            { role: 'user', content: highlightedText },
+            { role: 'assistant', content: userContext },
+        ],
+        temperature: 0.7,
+    };
+
+    fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`
+        },
+        body: JSON.stringify(customResultPayload)
+    })
+    .then(response => response.json())
+    .then(customResultData => {
+        console.log("Custom Result:", customResultData.choices[0].message.content);
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+function showUserContextPrompt(highlightedText) {
+    const contextInput = prompt("Type any other context for the highlighted text:");
+    if (contextInput !== null) {
+        const userContext = contextInput;
+        console.log("User context set:", userContext);
+        getCustomResult(highlightedText, userContext);
+    } else {
+        console.log("User canceled setting the context.");
+    }
 }
 
 document.addEventListener("mouseup", function() {
@@ -74,9 +115,7 @@ document.addEventListener("mouseup", function() {
     if (highlightedText) {
         console.log("Highlighted Text: " + highlightedText);
         getDictionaryMeaning(highlightedText);
-        getHistoricalData(highlightedText);
     } else {
         console.log("No text is highlighted.");
     }
 });
-
