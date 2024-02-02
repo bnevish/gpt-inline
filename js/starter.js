@@ -14,7 +14,7 @@ function getHighlightedText() {
 }
 
 function getDictionaryMeaning(highlightedText) {
-    const apiKey = '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';
+    const apiKey = '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';
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
 
     const dictionaryMeaningPayload = {
@@ -42,14 +42,14 @@ function getDictionaryMeaning(highlightedText) {
 }
 
 function getHistoricalData() {
-    const apiKey = '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';
+    const apiKey = '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';
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
 
     const historicalDataPayload = {
         model: 'gpt-3.5-turbo',
         messages: [
             { role: 'user', content: highlightedText },
-            { role: 'assistant', content: 'is the above word related to any historical data,if so what is that' },
+            { role: 'assistant', content: 'Tell me about the historical data of highlightedText.' },
         ],
         temperature: 0.7,
     };
@@ -79,3 +79,4 @@ document.addEventListener("mouseup", function() {
         console.log("No text is highlighted.");
     }
 });
+
