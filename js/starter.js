@@ -48,7 +48,8 @@ function getHistoricalData() {
     const historicalDataPayload = {
         model: 'gpt-3.5-turbo',
         messages: [
-            { role: 'user', content: 'Tell me about the historical data of India.' },
+            { role: 'user', content: highlightedText },
+            { role: 'assistant', content: 'is the above word related to any historical data,if so what is that' },
         ],
         temperature: 0.7,
     };
