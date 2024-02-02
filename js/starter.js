@@ -1,4 +1,4 @@
-console.log("starter.js is running good");
+console.log("starter.js is running good as usual");
 
 function getHighlightedText() {
     var text = "";
