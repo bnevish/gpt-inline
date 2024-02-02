@@ -14,8 +14,8 @@ function getHighlightedText() {
 }
 
 function getDictionaryMeaning(text) {
-    const apiKey = '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';
-    const apiUrl = 'https://api.openai.com/v1/engines/davinci-codex/completions';
+    const apiKey = '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';
+    const apiUrl = 'https://api.openai.com/v1/chat/completions';
 
     const payload = {
         prompt: `Define: ${text}`,
