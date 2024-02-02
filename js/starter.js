@@ -19,8 +19,8 @@ function getDictionaryMeaning(text) {
 
     const payload = {
         model: 'gpt-3.5-turbo',
-        prompt: `Define: ${text}`,
-        temperature: 0.7,
+        prompt:  `Define: ${text}`,
+        
     };
 
     fetch(apiUrl, {
