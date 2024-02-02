@@ -22,6 +22,7 @@ function getDictionaryMeaning(text) {
         messages: [
             { role: 'user', content: text },
         ],
+        temperature: 0.7,
     };
 
     fetch(apiUrl, {
