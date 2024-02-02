@@ -20,8 +20,8 @@ function getDictionaryMeaning(highlightedText) {
     const dictionaryMeaningPayload = {
         model: 'gpt-3.5-turbo',
         messages: [
-            { role: 'user', content: highlightedText },
-            { role: 'assistant', content: 'What is the dictionary meaning of the highlighted text?' },
+            { role: 'user', content: `What is the dictionary meaning of the ${highlightedText}?`},
+            
         ],
         temperature: 0.7,
     };
