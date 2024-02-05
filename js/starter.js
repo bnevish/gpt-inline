@@ -49,10 +49,10 @@ function getHistoricalData(highlightedText) {
     const historicalDataPayload = {
         model: 'gpt-3.5-turbo',
         messages: [
-            { role: 'user', content: highlightedText },
-            { role: 'assistant', content: 'Tell me about the historical data of highlightedText.' },
+            { role: 'user', content: `I'm curious about the historical data of ${highlightedText}.Could you provide insights into a particular aspect, time period, or context related to ${highlightedText} in history?My goal is to gather information and understand the historical background of ${highlightedText}.A concise and informative overview would be great.`},
+           
         ],
-        temperature: 0.7,
+        temperature: 0.5,
     };
 
     fetch(apiUrl, {
