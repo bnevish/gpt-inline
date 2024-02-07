@@ -1,28 +1,15 @@
 let userContext = null;
 
-function getHighlightedText() {
-    var highlightedText = "";
-    if (window.getSelection) {
-        var selection = window.getSelection();
-        if (selection && selection.toString()) {
-            highlightedText = selection.toString();
-        }
-    } else if (document.selection && document.selection.type != "Control") {
-        highlightedText = document.selection.createRange().text;
-    }
-    return highlightedText;
-}
-
-function getDictionaryMeaning(highlightedText) {
+function summarizeWebpageContent() {
     const apiKey = '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';
-    const apiUrl = 'https://api.openai.com/v1/chat/completions';
+    const apiUrl = 'https://api.openai.com/v1/summarization';
 
-    const dictionaryMeaningPayload = {
-        model: 'gpt-3.5-turbo',
-        messages: [
-            { role: 'user', content: `What is the dictionary meaning of the ${highlightedText}?`},
-        ],
-        temperature: 0.7,
+    const webpageContent = document.documentElement.outerHTML;
+
+    const summarizePayload = {
+        model: 'text-davinci-003',
+        prompt: webpageContent,
+        max_tokens: 150,
     };
 
     fetch(apiUrl, {
@@ -31,27 +18,25 @@ function getDictionaryMeaning(highlightedText) {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${apiKey}`
         },
-        body: JSON.stringify(dictionaryMeaningPayload)
+        body: JSON.stringify(summarizePayload)
     })
     .then(response => response.json())
-    .then(dictionaryMeaningData => {
-        console.log("Dictionary Meaning:", dictionaryMeaningData.choices[0].message.content);
-        getHistoricalData(highlightedText);
+    .then(summaryData => {
+        console.log("Summary:", summaryData.choices[0].text);
+        getHistoricalData(summaryData.choices[0].text);
     })
     .catch(error => console.error('Error:', error));
 }
 
-function getHistoricalData(highlightedText) {
+function getHistoricalData(summary) {
     const apiKey = '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';
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
-
-    const webpageContent = document.documentElement.outerHTML;
 
     const historicalDataPayload = {
         model: 'gpt-3.5-turbo',
         messages: [
-            { role: 'user', content: `I'm curious about the historical data of ${highlightedText}. Could you provide insights into a particular aspect, time period, or context related to ${highlightedText} in history? My goal is to gather information and understand the historical background of ${highlightedText}. A concise and informative overview in 10 lines would be great.` },
-            { role: 'assistant', content: webpageContent },
+            { role: 'user', content: `I'm curious about the historical data summarized from the webpage. Could you provide insights into a particular aspect, time period, or context related to this summary in history? My goal is to gather information and understand the historical background. A concise and informative overview in 10 lines would be great.` },
+            { role: 'assistant', content: summary },
         ],
         temperature: 0.5,
     };
@@ -67,40 +52,41 @@ function getHistoricalData(highlightedText) {
     .then(response => response.json())
     .then(historicalData => {
         console.log("Historical Data:", historicalData.choices[0].message.content);
-        showUserContextPrompt(highlightedText);
+        showUserContextPrompt();
     })
     .catch(error => console.error('Error:', error));
 }
 
-function getCustomResult(highlightedText) {
+function getCustomResult() {
     const apiKey = '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';
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
 
-    function fetchCustomResult() {
-        const customResultPayload = {
-            model: 'gpt-3.5-turbo',
-            messages: [
-                { role: 'user', content: highlightedText },
-                { role: 'assistant', content: userContext },
-            ],
-            temperature: 0.7,
-        };
+    // Assuming we have some highlighted text or user input to provide as context
+    const userInput = prompt("Type any highlighted text or additional context:");
 
-        fetch(apiUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${apiKey}`
-            },
-            body: JSON.stringify(customResultPayload)
-        })
-        .then(response => response.json())
-        .then(customResultData => {
-            console.log("Custom Result:", customResultData.choices[0].message.content);
-            continueOrEnd();
-        })
-        .catch(error => console.error('Error:', error));
-    }
+    const customResultPayload = {
+        model: 'gpt-3.5-turbo',
+        messages: [
+            { role: 'user', content: userInput },
+            { role: 'assistant', content: userContext },
+        ],
+        temperature: 0.7,
+    };
+
+    fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`
+        },
+        body: JSON.stringify(customResultPayload)
+    })
+    .then(response => response.json())
+    .then(customResultData => {
+        console.log("Custom Result:", customResultData.choices[0].message.content);
+        continueOrEnd();
+    })
+    .catch(error => console.error('Error:', error));
 
     function continueOrEnd() {
         const userInput = prompt("Type context or 'end' to stop:");
@@ -108,7 +94,7 @@ function getCustomResult(highlightedText) {
             if (userInput.toLowerCase() !== 'end') {
                 userContext = userInput;
                 console.log("User context set:", userContext);
-                fetchCustomResult();
+                getCustomResult();
             } else {
                 console.log("User ended the process.");
             }
@@ -116,27 +102,19 @@ function getCustomResult(highlightedText) {
             console.log("User canceled setting the context.");
         }
     }
-
-    fetchCustomResult();
 }
 
-function showUserContextPrompt(highlightedText) {
-    const contextInput = prompt("Type any other context for the highlighted text:");
+function showUserContextPrompt() {
+    const contextInput = prompt("Type any additional context for the historical data:");
     if (contextInput !== null) {
         userContext = contextInput;
         console.log("User context set:", userContext);
-        getCustomResult(highlightedText);
+        getCustomResult();
     } else {
         console.log("User canceled setting the context.");
     }
 }
 
-document.addEventListener("mouseup", function() {
-    var highlightedText = getHighlightedText();
-    if (highlightedText) {
-        console.log("Highlighted Text: " + highlightedText);
-        getDictionaryMeaning(highlightedText);
-    } else {
-        console.log("No text is highlighted.");
-    }
+document.addEventListener("DOMContentLoaded", function() {
+    summarizeWebpageContent();
 });
