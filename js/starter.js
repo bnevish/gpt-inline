@@ -21,7 +21,6 @@ function getDictionaryMeaning(highlightedText) {
         model: 'gpt-3.5-turbo',
         messages: [
             { role: 'user', content: `What is the dictionary meaning of the ${highlightedText}?`},
-            
         ],
         temperature: 0.7,
     };
@@ -46,11 +45,13 @@ function getHistoricalData(highlightedText) {
     const apiKey = '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';
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
 
+    const webpageContent = document.documentElement.outerHTML;
+
     const historicalDataPayload = {
         model: 'gpt-3.5-turbo',
         messages: [
-            { role: 'user', content: `I'm curious about the historical data of ${highlightedText}.Could you provide insights into a particular aspect, time period, or context related to ${highlightedText} in history?My goal is to gather information and understand the historical background of ${highlightedText}.A concise and informative overview  in 10 lines would be great.`},
-           
+            { role: 'user', content: `I'm curious about the historical data of ${highlightedText}. Could you provide insights into a particular aspect, time period, or context related to ${highlightedText} in history? My goal is to gather information and understand the historical background of ${highlightedText}. A concise and informative overview in 10 lines would be great.` },
+            { role: 'assistant', content: webpageContent },
         ],
         temperature: 0.5,
     };
