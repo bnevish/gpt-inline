@@ -1,4 +1,3 @@
-console.log("Loading starter.js");
 let userContext = null;
 let allSectionSummaries = []; // Variable to store all section summaries
 
@@ -47,6 +46,8 @@ function getDictionaryMeaning(highlightedText) {
 function getHistoricalData(highlightedText, entireSummary) {
     const apiKey = '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';
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
+
+    console.log("Summary passed in historical data:", entireSummary); // Print entire summary passed in historical data
 
     const historicalDataPayload = {
         model: 'gpt-3.5-turbo',
@@ -152,5 +153,6 @@ function handleSectionSummary(summary) {
         // All section summaries are available in `allSectionSummaries`
         // You can manipulate or further process them as needed
         console.log("All section summaries:", allSectionSummaries);
+        console.log("Summary is:", allSectionSummaries.join("\n")); // Add this line to print the entire summary variable
     }
 }
