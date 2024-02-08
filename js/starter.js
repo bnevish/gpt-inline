@@ -1,5 +1,48 @@
 let userContext = null;
-let allSectionSummaries = []; // Variable to store all section summaries
+let allSectionSummaries = [];
+
+function getPageContent() {
+    return fetch(window.location.href)
+        .then(response => response.text())
+        .catch(error => {
+            console.error("Error retrieving page content:", error);
+            throw error;
+        });
+}
+
+async function generatePageSummary() {
+    try {
+        const pageContent = await getPageContent();
+        const apiKey = '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';
+        const apiUrl = 'https://api.openai.com/v1/chat/completions';
+
+        const pageSummaryPayload = {
+            model: 'gpt-3.5-turbo',
+            messages: [
+                { role: 'user', content: pageContent },
+                { role: 'assistant', content: 'Generate a summary of the entire webpage.' },
+            ],
+            temperature: 0.7,
+        };
+
+        fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${apiKey}`
+            },
+            body: JSON.stringify(pageSummaryPayload)
+        })
+        .then(response => response.json())
+        .then(pageSummaryData => {
+            const summary = pageSummaryData.choices[0].message.content;
+            console.log("Page Summary:", summary);
+        })
+        .catch(error => console.error('Error:', error));
+    } catch (error) {
+        console.error("Error generating page summary:", error);
+    }
+}
 
 function getHighlightedText() {
     var highlightedText = "";
@@ -21,8 +64,7 @@ function getDictionaryMeaning(highlightedText) {
     const dictionaryMeaningPayload = {
         model: 'gpt-3.5-turbo',
         messages: [
-            { role: 'user', content: `What is the dictionary meaning of the ${highlightedText}?`},
-            
+            { role: 'user', content: `What is the dictionary meaning of the ${highlightedText}?` },
         ],
         temperature: 0.7,
     };
@@ -38,7 +80,7 @@ function getDictionaryMeaning(highlightedText) {
     .then(response => response.json())
     .then(dictionaryMeaningData => {
         console.log("Dictionary Meaning:", dictionaryMeaningData.choices[0].message.content);
-        getHistoricalData(highlightedText, allSectionSummaries.join("\n")); // Pass entire summary to getHistoricalData
+        getHistoricalData(highlightedText, allSectionSummaries.join("\n"));
     })
     .catch(error => console.error('Error:', error));
 }
@@ -47,13 +89,11 @@ function getHistoricalData(highlightedText, entireSummary) {
     const apiKey = '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';
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
 
-    console.log("Summary passed in historical data:", entireSummary); // Print entire summary passed in historical data
-
     const historicalDataPayload = {
         model: 'gpt-3.5-turbo',
         messages: [
-            { role: 'user', content: `I'm curious about the historical data of ${highlightedText}.Could you provide insights into a particular aspect, time period, or context related to ${highlightedText} in history?My goal is to gather information and understand the historical background of ${highlightedText}.A concise and informative overview  in 10 lines would be great.`},
-            { role: 'assistant', content: entireSummary }, // Include entire summary as historical context
+            { role: 'user', content: `I'm curious about the historical data of ${highlightedText}.Could you provide insights into a particular aspect, time period, or context related to ${highlightedText} in history?My goal is to gather information and understand the historical background of ${highlightedText}.A concise and informative overview  in 10 lines would be great.` },
+            { role: 'assistant', content: entireSummary },
         ],
         temperature: 0.5,
     };
@@ -69,7 +109,6 @@ function getHistoricalData(highlightedText, entireSummary) {
     .then(response => response.json())
     .then(historicalData => {
         console.log("Historical Data:", historicalData.choices[0].message.content);
-        // Push the historical data into the user context
         userContext = historicalData.choices[0].message.content;
         showUserContextPrompt(highlightedText);
     })
@@ -135,24 +174,21 @@ function showUserContextPrompt(highlightedText) {
     }
 }
 
-document.addEventListener("mouseup", function() {
+document.addEventListener("mouseup", async function() {
     var highlightedText = getHighlightedText();
     if (highlightedText) {
         console.log("Highlighted Text: " + highlightedText);
+        await generatePageSummary();
         getDictionaryMeaning(highlightedText);
     } else {
         console.log("No text is highlighted.");
     }
 });
 
-// Function to handle the completion of each section summary
 function handleSectionSummary(summary) {
     allSectionSummaries.push(summary);
-    // If all sections are processed, you can further process `allSectionSummaries` here
     if (allSectionSummaries.length === sections.length) {
-        // All section summaries are available in `allSectionSummaries`
-        // You can manipulate or further process them as needed
         console.log("All section summaries:", allSectionSummaries);
-        console.log("Summary is:", allSectionSummaries.join("\n")); // Add this line to print the entire summary variable
+        console.log("Summary is:", allSectionSummaries.join("\n"));
     }
 }
