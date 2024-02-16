@@ -1,48 +1,4 @@
 let userContext = null;
-let allSectionSummaries = [];
-
-function getPageContent() {
-    return fetch(window.location.href)
-        .then(response => response.text())
-        .catch(error => {
-            console.error("Error retrieving page content:", error);
-            throw error;
-        });
-}
-
-async function generatePageSummary() {
-    try {
-        const pageContent = await getPageContent();
-        const apiKey = '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';
-        const apiUrl = 'https://api.openai.com/v1/chat/completions';
-
-        const pageSummaryPayload = {
-            model: 'gpt-3.5-turbo',
-            messages: [
-                { role: 'user', content: pageContent },
-                { role: 'assistant', content: 'Generate a summary of the entire webpage.' },
-            ],
-            temperature: 0.7,
-        };
-
-        fetch(apiUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${apiKey}`
-            },
-            body: JSON.stringify(pageSummaryPayload)
-        })
-        .then(response => response.json())
-        .then(pageSummaryData => {
-            const summary = pageSummaryData.choices[0].message.content;
-            console.log("Page Summary:", summary);
-        })
-        .catch(error => console.error('Error:', error));
-    } catch (error) {
-        console.error("Error generating page summary:", error);
-    }
-}
 
 function getHighlightedText() {
     var highlightedText = "";
@@ -64,7 +20,8 @@ function getDictionaryMeaning(highlightedText) {
     const dictionaryMeaningPayload = {
         model: 'gpt-3.5-turbo',
         messages: [
-            { role: 'user', content: `What is the dictionary meaning of the ${highlightedText}?` },
+            { role: 'user', content: `What is the dictionary meaning of the ${highlightedText}?`},
+            
         ],
         temperature: 0.7,
     };
@@ -80,34 +37,22 @@ function getDictionaryMeaning(highlightedText) {
     .then(response => response.json())
     .then(dictionaryMeaningData => {
         console.log("Dictionary Meaning:", dictionaryMeaningData.choices[0].message.content);
-        getHistoricalData(highlightedText, allSectionSummaries.join("\n"));
+        getHistoricalData(highlightedText);
     })
     .catch(error => console.error('Error:', error));
 }
 
-function getHistoricalData(highlightedText, entireSummary) {
+function getHistoricalData(highlightedText) {
     const apiKey = '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';
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
 
-    const historicalDataPayload ={
-        "model": "gpt-3.5-turbo",
-        "messages": [
-            {
-                "role": "user",
-                "content": "need to get the historical details of ${highlightedText} in a very short words to get a small idea about  ${highlightedText} .the output should be in the following format:<first 3 lines of description><3 lines of important year details><4 line details on ${highlightedText}  based on the context ${web page context} >"
-            },
-            {
-                "role": "assistant",
-                "input": "need to get the historical details of China in a very short words to get a small idea about China. The output should be in the following format: <first 3 lines of description><3 lines of important year details><4 line details on China based on the context China is good in economy>",
-                "output": "China, one of the world's oldest civilizations, has a rich cultural heritage and a long history of dynasties and empires. 1949 marked the establishment of the People's Republic of China, and in 1978, it embarked on economic reforms under Deng Xiaoping. Today, China boasts the world's second-largest economy and is a global manufacturing hub."
-            },
-            {
-                "role": "assistant",
-                "input": "need to get the historical details of Brazil in a very short words to get a small idea about Brazil. The output should be in the following format: <first 3 lines of description><3 lines of important year details><4 line details on Brazil based on the context Brazil offers a myriad of opportunities>",
-                "output": "Brazil, the largest country in South America, is known for its vibrant culture, diverse ecosystems, and rich history. In 1822, Brazil declared independence from Portugal, and in 1888, slavery was abolished. With its vast Amazon rainforest, bustling cities like Rio de Janeiro and São Paulo, and thriving agricultural industry, Brazil offers a myriad of opportunities."
-            }
+    const historicalDataPayload = {
+        model: 'gpt-3.5-turbo',
+        messages: [
+            { role: 'user', content: `I'm curious about the historical data of ${highlightedText}.Could you provide insights into a particular aspect, time period, or context related to ${highlightedText} in history?My goal is to gather information and understand the historical background of ${highlightedText}.A concise and informative overview  in 10 lines would be great.`},
+           
         ],
-        "temperature": 0.4
+        temperature: 0.5,
     };
 
     fetch(apiUrl, {
@@ -121,7 +66,6 @@ function getHistoricalData(highlightedText, entireSummary) {
     .then(response => response.json())
     .then(historicalData => {
         console.log("Historical Data:", historicalData.choices[0].message.content);
-        userContext = historicalData.choices[0].message.content;
         showUserContextPrompt(highlightedText);
     })
     .catch(error => console.error('Error:', error));
@@ -186,21 +130,12 @@ function showUserContextPrompt(highlightedText) {
     }
 }
 
-document.addEventListener("mouseup", async function() {
+document.addEventListener("mouseup", function() {
     var highlightedText = getHighlightedText();
     if (highlightedText) {
         console.log("Highlighted Text: " + highlightedText);
-        await generatePageSummary();
         getDictionaryMeaning(highlightedText);
     } else {
         console.log("No text is highlighted.");
     }
 });
-
-function handleSectionSummary(summary) {
-    allSectionSummaries.push(summary);
-    if (allSectionSummaries.length === sections.length) {
-        console.log("All section summaries:", allSectionSummaries);
-        console.log("Summary is:", allSectionSummaries.join("\n"));
-    }
-}
