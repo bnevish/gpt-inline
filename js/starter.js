@@ -42,7 +42,7 @@ function getDictionaryMeaning(highlightedText) {
     .catch(error => console.error('Error:', error));
 }
 
-function getHistoricalData(highlightedText,web page context="good in sports") {
+function getHistoricalData(highlightedText,page_context="good in sports") {
     const apiKey = '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';
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
 
@@ -51,7 +51,7 @@ function getHistoricalData(highlightedText,web page context="good in sports") {
         "messages": [
             {
                 "role": "user",
-                "content": "need to get the historical details of ${highlightedText} in a very short words to get a small idea about  ${highlightedText} .the output should be in the following format:<first 3 lines of description><3 lines of important year details><4 line details on ${highlightedText}  based on the context ${web page context} >"
+                "content": "need to get the historical details of ${highlightedText} in a very short words to get a small idea about  ${highlightedText} .the output should be in the following format:<first 3 lines of description><3 lines of important year details><4 line details on ${highlightedText}  based on the context ${page_context} >"
             },
             {
                 "role": "assistant",
@@ -65,8 +65,7 @@ function getHistoricalData(highlightedText,web page context="good in sports") {
             }
         ],
         "temperature": 0.3
-    }
-    ;
+    };
 
     fetch(apiUrl, {
         method: 'POST',
