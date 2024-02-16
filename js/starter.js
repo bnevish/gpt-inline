@@ -49,17 +49,17 @@ function getHistoricalData(highlightedText) {
     const historicalDataPayload = {
         "model": "gpt-3.5-turbo",
         "messages": [
-            {
-                "role": "user",
-                "content": `need to get the historical details of ${highlightedText} in a very short words to get a small idea about ${highlightedText}. The output should be in the following format:<first 3 lines of description><3 lines of important year details><4 line details on ${highlightedText} based on the context world war >`
-            },
-            {
-                "role": "assistant",
-                "content": `need to get the historical details of ${highlightedText} in a very short words to get a small idea about ${highlightedText}. The output should be in the following format: <first 3 lines of description><3 lines of important year details><4 line details on ${highlightedText} based on the context ${highlightedText} is good in economy>`
-            }
+        {
+        "role": "user",
+        "content": "need to get the historical details of china in a very short words to get a small idea about china. The output should be in the following format:<first 3 lines of description><3 lines of important year details><4 line details on china based on the context world war >"
+        },
+        {
+        "role": "assistant",
+        "content": "China, one of the world's oldest civilizations, boasts a rich history spanning over 4,000 years. From the legendary Xia Dynasty to the present-day People's Republic, China has witnessed dynastic shifts, cultural revolutions, and remarkable achievements.\n\nImportant Years:\n- 221 BCE: Unification under the Qin Dynasty establishes the first centralized imperial state.\n- 1271 CE: Mongol leader Kublai Khan establishes the Yuan Dynasty, marking foreign rule over China.\n- 1949 CE: The founding of the People's Republic of China under Mao Zedong ushers in communist rule.\n\nChina has demonstrated remarkable resilience and growth, emerging as a global economic powerhouse. With its vast market, manufacturing capabilities, and strategic investments, China plays a pivotal role in shaping the world economy."
+        }
         ],
         "temperature": 0.3
-    };
+        };
 
     fetch(apiUrl, {
         method: 'POST',
