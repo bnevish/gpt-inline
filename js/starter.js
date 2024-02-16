@@ -46,7 +46,7 @@ function getHistoricalData(highlightedText) {
     const apiKey = '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';
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
 
-    const historicalDataPayload =   {
+    const historicalDataPayload = {
         "model": "gpt-3.5-turbo",
         "messages": [
             {
@@ -55,11 +55,7 @@ function getHistoricalData(highlightedText) {
             },
             {
                 "role": "assistant",
-                "content": `need to get the historical details of ${highlightedText} in a very short words to get a small idea about ${highlightedText}. The output should be in the following format: <first 3 lines of description><3 lines of important year details><4 line details on ${highlightedText} based on the context ${highlightedText} is good in economy>
-    
-    Example: 
-    Input: need to get the historical details of China in a very short words to get a small idea about China. The output should be in the following format: <first 3 lines of description><3 lines of important year details><4 line details on China based on the context China is good in economy>
-    Output: China, one of the world's oldest civilizations, has a rich cultural heritage and a long history of dynasties and empires. 1949 marked the establishment of the People's Republic of China, and in 1978, it embarked on economic reforms under Deng Xiaoping. Today, China boasts the world's second-largest economy and is a global manufacturing hub.`
+                "content": `need to get the historical details of ${highlightedText} in a very short words to get a small idea about ${highlightedText}. The output should be in the following format: <first 3 lines of description><3 lines of important year details><4 line details on ${highlightedText} based on the context ${highlightedText} is good in economy>`
             }
         ],
         "temperature": 0.3
