@@ -1,32 +1,7 @@
-// Function to fetch and summarize the webpage content using ChatGPT
-async function summarizeWebPage() {
-    const url = window.location.href; // Get the current URL
-
-    // Fetch the webpage content
-    const response = await fetch(url);
-    const html = await response.text();
-
-    // Parse HTML
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, 'text/html');
-
-    // Extract relevant elements for summarization (e.g., headings, paragraphs, sections)
-    const elements = Array.from(doc.querySelectorAll('h1, h2, h3, p, section'));
-
-    // Extract text content from elements
-    const textContent = elements.map(element => element.textContent.trim()).join('\n');
-
-    // Call ChatGPT to summarize the webpage content
-    const summary = await getGPTSummary(textContent);
-    
-    // Display the summarized content
-    console.log("Webpage Summary:", summary);
-}
-
 // Function to call ChatGPT for summarization
 async function getGPTSummary(text) {
-    const apiKey = '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';
-    const apiUrl = 'https://api.openai.com/v1/completions';
+    const apiKey = 'YOUR_API_KEY';
+    const apiUrl = 'https://api.openai.com/v1/engines/davinci/completions'; // Corrected endpoint URL
 
     const payload = {
         model: 'text-davinci-003',
@@ -50,6 +25,31 @@ async function getGPTSummary(text) {
     const summary = data.choices[0].text.trim();
 
     return summary;
+}
+
+// Function to fetch and summarize the webpage content using ChatGPT
+async function summarizeWebPage() {
+    const url = window.location.href; // Get the current URL
+
+    // Fetch the webpage content
+    const response = await fetch(url);
+    const html = await response.text();
+
+    // Parse HTML
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+
+    // Extract relevant elements for summarization (e.g., headings, paragraphs, sections)
+    const elements = Array.from(doc.querySelectorAll('h1, h2, h3, p, section'));
+
+    // Extract text content from elements
+    const textContent = elements.map(element => element.textContent.trim()).join('\n');
+
+    // Call ChatGPT to summarize the webpage content
+    const summary = await getGPTSummary(textContent);
+    
+    // Display the summarized content
+    console.log("Webpage Summary:", summary);
 }
 
 // Event listener for text highlighting
