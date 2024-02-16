@@ -42,7 +42,7 @@ function getDictionaryMeaning(highlightedText) {
     .catch(error => console.error('Error:', error));
 }
 
-function getHistoricalData(highlightedText,page_context="good in sports") {
+function getHistoricalData(highlightedText) {
     const apiKey = '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';
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
 
