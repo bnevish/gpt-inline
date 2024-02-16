@@ -1,4 +1,4 @@
-console.log("Lets begin!!!!!!!!!!!");
+console.log("Lets begin!!!!!!!!!!!!!!!!!!!!!");
 
 
 let userContext = null;
@@ -185,4 +185,5 @@ function showUserContextPrompt() {
 }
 
 document.addEventListener("mouseup", function() {
-    getHistorical
+    getHistoricalData();
+});
