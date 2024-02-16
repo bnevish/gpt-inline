@@ -51,7 +51,7 @@ function getHistoricalData(highlightedText) {
         "messages": [
             {
                 "role": "user",
-                "content": "need to get the historical details of china in a very short words to get a small idea about china. The output should be in the following format:<first 3 lines of description><3 lines of important year details><4 line details on china based on the context world war >"
+                "content":`need to get the historical details of ${highlightedText} in a very short words to get a small idea about ${highlightedText}. The output should be in the following format:<first 3 lines of description><3 lines of important year details><4 line details on ${highlightedText} based on the context world war >`
             },
             {
                 "role": "assistant",
