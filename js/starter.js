@@ -23,7 +23,7 @@ function getDictionaryMeaning(highlightedText) {
             { role: 'user', content: `What is the dictionary meaning of the ${highlightedText}?`},
             
         ],
-        temperature: 0.7,
+        temperature: 0.5,
     };
 
     fetch(apiUrl, {
@@ -52,7 +52,7 @@ function getHistoricalData(highlightedText) {
             { role: 'user', content: `I'm curious about the historical data of ${highlightedText}.Could you provide insights into a particular aspect, time period, or context related to ${highlightedText} in history?My goal is to gather information and understand the historical background of ${highlightedText}.A concise and informative overview  in 10 lines would be great.`},
            
         ],
-        temperature: 0.5,
+        temperature: 0.3,
     };
 
     fetch(apiUrl, {
