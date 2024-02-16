@@ -1,7 +1,11 @@
+console.log("Lets begin!!!!!!!!!!!");
+
+
 let userContext = null;
 
 function getHighlightedText() {
     var highlightedText = "";
+    var url = window.location.href; // Get the current URL
     if (window.getSelection) {
         var selection = window.getSelection();
         if (selection && selection.toString()) {
@@ -10,48 +14,82 @@ function getHighlightedText() {
     } else if (document.selection && document.selection.type != "Control") {
         highlightedText = document.selection.createRange().text;
     }
-    return highlightedText;
+    return { highlightedText, url };
 }
 
-function getDictionaryMeaning(highlightedText) {
-    const apiKey = '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';
-    const apiUrl = 'https://api.openai.com/v1/chat/completions';
+async function summarizeWebPage(url) {
+    // Fetch the webpage content
+    const response = await fetch(url);
+    const html = await response.text();
 
-    const dictionaryMeaningPayload = {
-        model: 'gpt-3.5-turbo',
-        messages: [
-            { role: 'user', content: `What is the dictionary meaning of the ${highlightedText}?`},
-            
-        ],
+    // Parse HTML
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+
+    // Extract relevant elements for summarization (e.g., headings, paragraphs, sections)
+    const elements = Array.from(doc.querySelectorAll('h1, h2, h3, p, section'));
+
+    // Summarize each element individually
+    const summaries = await Promise.all(elements.map(async (element) => {
+        // Extract text content from the element
+        const text = element.textContent.trim();
+
+        // Pass the text to GPT for summarization
+        const summary = await summarizeText(text);
+        return summary;
+    }));
+
+    // Combine all summaries into a single string
+    const combinedSummary = summaries.join('\n');
+
+    return combinedSummary;
+}
+
+async function summarizeText(text) {
+    // Call GPT to summarize the provided text
+    const apiKey = 'YOUR_API_KEY';
+    const apiUrl = 'https://api.openai.com/v1/engines/davinci/completions';
+
+    const payload = {
+        model: 'text-davinci-003',
+        prompt: text,
+        max_tokens: 50,
         temperature: 0.5,
+        n: 1,
+        stop: ['\n']
     };
 
-    fetch(apiUrl, {
+    const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${apiKey}`
         },
-        body: JSON.stringify(dictionaryMeaningPayload)
-    })
-    .then(response => response.json())
-    .then(dictionaryMeaningData => {
-        console.log("Dictionary Meaning:", dictionaryMeaningData.choices[0].message.content);
-        getHistoricalData(highlightedText);
-    })
-    .catch(error => console.error('Error:', error));
+        body: JSON.stringify(payload)
+    });
+
+    const data = await response.json();
+    const summary = data.choices[0].text.trim();
+
+    return summary;
 }
 
-function getHistoricalData(highlightedText) {
+async function getHistoricalData() {
     const apiKey = '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';
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
+
+    // Fetch the highlighted text and URL
+    const { highlightedText, url } = getHighlightedText();
+
+    // Fetch and summarize the webpage content
+    const webContent = await summarizeWebPage(url);
 
     const historicalDataPayload = {
         "model": "gpt-3.5-turbo",
         "messages": [
             {
                 "role": "user",
-                "content":`need to get the historical details of ${highlightedText} in a very short words to get a small idea about ${highlightedText}. The output should be in the following format:<first 3 lines of description><3 lines of important year details><4 line details on ${highlightedText} based on the context world war >`
+                "content":`need to get the historical details of ${highlightedText} in a very short words to get a small idea about ${highlightedText}. The output should be in the following format:<first 3 lines of description><3 lines of important year details><4 line details on ${highlightedText} based on the  ${webContent} >`
             },
             {
                 "role": "assistant",
@@ -73,7 +111,7 @@ function getHistoricalData(highlightedText) {
         .then(response => response.json())
         .then(historicalData => {
             console.log("Historical Data:", historicalData.choices[0].message.content);
-            showUserContextPrompt(highlightedText);
+            showUserContextPrompt();
         })
         .catch(error => {
             console.error('Error:', error);
@@ -86,8 +124,6 @@ function getHistoricalData(highlightedText) {
     fetchData.retryCount = 0;
     fetchData();
 }
-
-
 
 function getCustomResult(highlightedText) {
     const apiKey = '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';
@@ -137,23 +173,16 @@ function getCustomResult(highlightedText) {
     fetchCustomResult();
 }
 
-function showUserContextPrompt(highlightedText) {
+function showUserContextPrompt() {
     const contextInput = prompt("Type any other context for the highlighted text:");
     if (contextInput !== null) {
         userContext = contextInput;
         console.log("User context set:", userContext);
-        getCustomResult(highlightedText);
+        getCustomResult();
     } else {
         console.log("User canceled setting the context.");
     }
 }
 
 document.addEventListener("mouseup", function() {
-    var highlightedText = getHighlightedText();
-    if (highlightedText) {
-        console.log("Highlighted Text: " + highlightedText);
-        getDictionaryMeaning(highlightedText);
-    } else {
-        console.log("No text is highlighted.");
-    }
-});
+    getHistorical
