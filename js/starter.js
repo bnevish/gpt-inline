@@ -1,7 +1,7 @@
 // Function to call ChatGPT for summarization
 async function getGPTSummary(text) {
     const apiKey = 'YOUR_API_KEY';
-    const apiUrl = 'https://api.openai.com/v1/engines/davinci/completions'; // Corrected endpoint URL
+    const apiUrl = 'https://api.openai.com/v1/engines/davinci/completions';
 
     const payload = {
         model: 'text-davinci-003',
@@ -42,12 +42,29 @@ async function summarizeWebPage() {
     // Extract relevant elements for summarization (e.g., headings, paragraphs, sections)
     const elements = Array.from(doc.querySelectorAll('h1, h2, h3, p, section'));
 
-    // Extract text content from elements
-    const textContent = elements.map(element => element.textContent.trim()).join('\n');
+    // Extract text content from elements and split into smaller parts
+    const chunkSize = 500; // Adjust the chunk size as needed
+    const chunks = [];
+    let chunk = '';
+    for (const element of elements) {
+        const text = element.textContent.trim();
+        if ((chunk + text).length > chunkSize) {
+            chunks.push(chunk);
+            chunk = '';
+        }
+        chunk += text + '\n';
+    }
+    if (chunk !== '') {
+        chunks.push(chunk);
+    }
 
-    // Call ChatGPT to summarize the webpage content
-    const summary = await getGPTSummary(textContent);
-    
+    // Process chunks sequentially to avoid too many requests
+    let summary = '';
+    for (const chunk of chunks) {
+        const chunkSummary = await getGPTSummary(chunk);
+        summary += chunkSummary + '\n';
+    }
+
     // Display the summarized content
     console.log("Webpage Summary:", summary);
 }
