@@ -59,11 +59,13 @@ function getHistoricalData(highlightedText) {
             },
             {
                 "role": "assistant",
-                "content": `China, one of the world's oldest civilizations, has a rich cultural heritage and a long history of dynasties and empires. 1949 marked the establishment of the People's Republic of China, and in 1978, it embarked on economic reforms under Deng Xiaoping. Today, China boasts the world's second-largest economy and is a global manufacturing hub.`
+                "input": `need to get the historical details of China in a very short words to get a small idea about China. The output should be in the following format: <first 3 lines of description><3 lines of important year details><4 line details on China based on the context China is good in economy>`,
+                "output": "China, one of the world's oldest civilizations, has a rich cultural heritage and a long history of dynasties and empires. 1949 marked the establishment of the People's Republic of China, and in 1978, it embarked on economic reforms under Deng Xiaoping. Today, China boasts the world's second-largest economy and is a global manufacturing hub."
             },
             {
                 "role": "assistant",
-                "content": `Brazil, the largest country in South America, is known for its vibrant culture, diverse ecosystems, and rich history. In 1822, Brazil declared independence from Portugal, and in 1888, slavery was abolished. With its vast Amazon rainforest, bustling cities like Rio de Janeiro and São Paulo, and thriving agricultural industry, Brazil offers a myriad of opportunities.`
+                "input": `need to get the historical details of Brazil in a very short words to get a small idea about Brazil. The output should be in the following format: <first 3 lines of description><3 lines of important year details><4 line details on Brazil based on the context Brazil offers a myriad of opportunities>`,
+                "output": "Brazil, the largest country in South America, is known for its vibrant culture, diverse ecosystems, and rich history. In 1822, Brazil declared independence from Portugal, and in 1888, slavery was abolished. With its vast Amazon rainforest, bustling cities like Rio de Janeiro and São Paulo, and thriving agricultural industry, Brazil offers a myriad of opportunities."
             }
         ],
         "temperature": 0.3
