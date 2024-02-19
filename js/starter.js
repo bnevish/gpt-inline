@@ -1,7 +1,7 @@
 // Function to call ChatGPT for summarization
 async function getGPTSummary(text) {
     const apiKey = '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';
-    const apiUrl = 'https://api.openai.com/v1/engines/davinci/completions';
+    const apiUrl = 'https://api.openai.com/v1/chat/completions';
 
     const payload = {
         model: 'text-davinci-003',
