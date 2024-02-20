@@ -70,7 +70,7 @@ function getHistoricalData(highlightedText) {
                 India continues to be a vibrant democracy with a booming economy, facing challenges such as regional tensions, economic inequality, and environmental degradation. Recent years have seen advancements in technology, space exploration, and diplomatic relations, positioning India as a key player on the global stage`
             }
         ],
-        "temperature": 0.3
+        "temperature": 0.6
     };
 
     const fetchData = () => {
