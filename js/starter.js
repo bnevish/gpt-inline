@@ -13,7 +13,7 @@ function getHighlightedText() {
     return highlightedText;
 }
 
-function getDictionaryMeaning(highlightedText,web_content) {
+function getDictionaryMeaning(highlightedText) {
     const apiKey = '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';
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
 
@@ -37,12 +37,12 @@ function getDictionaryMeaning(highlightedText,web_content) {
     .then(response => response.json())
     .then(dictionaryMeaningData => {
         console.log("Dictionary Meaning:", dictionaryMeaningData.choices[0].message.content);
-        getHistoricalData(highlightedText,web_content);
+        getHistoricalData(highlightedText);
     })
     .catch(error => console.error('Error:', error));
 }
 
-function getHistoricalData(highlightedText,web_content) {
+function getHistoricalData(highlightedText) {
     const apiKey = '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';
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
 
@@ -164,7 +164,7 @@ document.addEventListener("mouseup", function() {
     var highlightedText = getHighlightedText();
     if (highlightedText) {
         console.log("Highlighted Text: " + highlightedText);
-        getDictionaryMeaning(highlightedText,web_content);
+        getDictionaryMeaning(highlightedText);
     } else {
         console.log("No text is highlighted.");
     }
