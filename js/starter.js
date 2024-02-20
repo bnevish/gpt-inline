@@ -1,7 +1,5 @@
-
-
 const apiUrl = 'https://api.openai.com/v1/chat/completions';
-let delayBetweenRequests = 1000; // Initial delay between requests (in milliseconds)
+let delayBetweenRequests = 2000; // Initial delay between requests (in milliseconds)
 let retryCount = 0; // Number of retry attempts
 
 // Function to fetch custom result from the OpenAI API with rate limiting and exponential backoff
@@ -41,7 +39,7 @@ async function fetchCustomResult(text) {
         // Exponential backoff: increase delay between requests and retry
         retryCount++;
         delayBetweenRequests *= 2; // Double the delay
-        if (retryCount < 5) { // Limit the number of retries
+        if (retryCount < 3) { // Limit the number of retries
             console.log(`Retrying (${retryCount})...`);
             return fetchCustomResult(text);
         } else {
