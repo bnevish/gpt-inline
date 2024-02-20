@@ -2,7 +2,7 @@ const apiUrl = 'https://api.openai.com/v1/chat/completions';
 
 // Function to fetch custom result from the OpenAI API
 async function fetchCustomResult(text) {
-    const apiKey = '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'; // Replace 'YOUR_API_KEY' with your actual API key
+    const apiKey = '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'; // Replace 'YOUR_API_KEY' with your actual API key
 
     const payload = {
         model: 'gpt-3.5-turbo',
