@@ -1,88 +1,171 @@
-// Function to call ChatGPT for summarization
-async function getGPTSummary(text) {
+let userContext = null;
+
+function getHighlightedText() {
+    var highlightedText = "";
+    if (window.getSelection) {
+        var selection = window.getSelection();
+        if (selection && selection.toString()) {
+            highlightedText = selection.toString();
+        }
+    } else if (document.selection && document.selection.type != "Control") {
+        highlightedText = document.selection.createRange().text;
+    }
+    return highlightedText;
+}
+
+function getDictionaryMeaning(highlightedText,web_content) {
     const apiKey = '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';
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
 
-    const payload = {
+    const dictionaryMeaningPayload = {
         model: 'gpt-3.5-turbo',
-        prompt: text,
-        max_tokens: 100,
+        messages: [
+            { role: 'user', content: `What is the dictionary meaning of the ${highlightedText}?`},
+            
+        ],
         temperature: 0.5,
-        n: 1,
-        stop: ['\n']
     };
 
-    const response = await fetch(apiUrl, {
+    fetch(apiUrl, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${apiKey}`
         },
-        body: JSON.stringify(payload)
-    });
-
-    const data = await response.json();
-    const summary = data.choices[0].text.trim();
-
-    return summary;
+        body: JSON.stringify(dictionaryMeaningPayload)
+    })
+    .then(response => response.json())
+    .then(dictionaryMeaningData => {
+        console.log("Dictionary Meaning:", dictionaryMeaningData.choices[0].message.content);
+        getHistoricalData(highlightedText,web_content);
+    })
+    .catch(error => console.error('Error:', error));
 }
 
-// Function to fetch and summarize the webpage content using ChatGPT
-async function summarizeWebPage() {
-    const url = window.location.href; // Get the current URL
+function getHistoricalData(highlightedText,web_content) {
+    const apiKey = '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';
+    const apiUrl = 'https://api.openai.com/v1/chat/completions';
 
-    // Fetch the webpage content
-    const response = await fetch(url);
-    const html = await response.text();
+    const historicalDataPayload = {
+        "model": "gpt-3.5-turbo",
+        "messages": [
+            {
+                "role": "user",
+                "content":`need to get the historical details of ${highlightedText} 
+				example
+				1.input:
+				  output:
+				>`
+            },
+            {
+                "role": "assistant",
+                "content": `i am developing a product which provides details about the text that they prefer to get a short detailed  historical data.when user provide a word then provide output in the following response format :<short historical details about the word><important dates><relevance with current affairs>.For example if user selects keyword india then below is the result expected : India, one of the world's oldest civilizations, has a rich history spanning thousands of years. It has seen the rise and fall of numerous empires, the spread of religions, and the struggle for independence.
 
-    // Parse HTML
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, 'text/html');
+                Important Dates:
+                
+                1947: Independence from British rule, marking the birth of the modern Indian nation.
+                1950: Adoption of the Indian Constitution, establishing India as a democratic republic.
+                1991: Economic liberalization reforms launched, leading to significant economic growth and globalization.
+                Current Affairs:
+                India continues to be a vibrant democracy with a booming economy, facing challenges such as regional tensions, economic inequality, and environmental degradation. Recent years have seen advancements in technology, space exploration, and diplomatic relations, positioning India as a key player on the global stage`
+            }
+        ],
+        "temperature": 0.3
+    };
 
-    // Extract relevant elements for summarization (e.g., headings, paragraphs, sections)
-    const elements = Array.from(doc.querySelectorAll('h1, h2, h3, p, section'));
+    const fetchData = () => {
+        fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${apiKey}`
+            },
+            body: JSON.stringify(historicalDataPayload)
+        })
+        .then(response => response.json())
+        .then(historicalData => {
+            console.log("Historical Data:", historicalData.choices[0].message.content);
+            showUserContextPrompt(highlightedText);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            // Retry after a delay with exponential backoff
+            setTimeout(fetchData, Math.pow(2, fetchData.retryCount) * 1000); // Exponential backoff
+            fetchData.retryCount++;
+        });
+    };
 
-    // Extract text content from elements and split into smaller parts
-    const chunkSize = 500; // Adjust the chunk size as needed
-    const chunks = [];
-    let chunk = '';
-    for (const element of elements) {
-        const text = element.textContent.trim();
-        if ((chunk + text).length > chunkSize) {
-            chunks.push(chunk);
-            chunk = '';
+    fetchData.retryCount = 0;
+    fetchData();
+}
+
+
+
+function getCustomResult(highlightedText) {
+    const apiKey = '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';
+    const apiUrl = 'https://api.openai.com/v1/chat/completions';
+
+    function fetchCustomResult() {
+        const customResultPayload = {
+            model: 'gpt-3.5-turbo',
+            messages: [
+                { role: 'user', content: highlightedText },
+                { role: 'assistant', content: userContext },
+            ],
+            temperature: 0.7,
+        };
+
+        fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${apiKey}`
+            },
+            body: JSON.stringify(customResultPayload)
+        })
+        .then(response => response.json())
+        .then(customResultData => {
+            console.log("Custom Result:", customResultData.choices[0].message.content);
+            continueOrEnd();
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    function continueOrEnd() {
+        const userInput = prompt("Type context or 'end' to stop:");
+        if (userInput !== null) {
+            if (userInput.toLowerCase() !== 'end') {
+                userContext = userInput;
+                console.log("User context set:", userContext);
+                fetchCustomResult();
+            } else {
+                console.log("User ended the process.");
+            }
+        } else {
+            console.log("User canceled setting the context.");
         }
-        chunk += text + '\n';
-    }
-    if (chunk !== '') {
-        chunks.push(chunk);
     }
 
-    // Process chunks sequentially to avoid too many requests
-    let summary = '';
-    for (const chunk of chunks) {
-        const chunkSummary = await getGPTSummary(chunk);
-        summary += chunkSummary + '\n';
-    }
-
-    // Display the summarized content
-    console.log("Webpage Summary:", summary);
+    fetchCustomResult();
 }
 
-// Event listener for text highlighting
+function showUserContextPrompt(highlightedText) {
+    const contextInput = prompt("Type any other context for the highlighted text:");
+    if (contextInput !== null) {
+        userContext = contextInput;
+        console.log("User context set:", userContext);
+        getCustomResult(highlightedText);
+    } else {
+        console.log("User canceled setting the context.");
+    }
+}
+
 document.addEventListener("mouseup", function() {
-    var selectedText = getSelectedText();
-    if (selectedText) {
-        console.log("Highlighted Text:", selectedText);
-        summarizeWebPage();
+    var highlightedText = getHighlightedText();
+    if (highlightedText) {
+        console.log("Highlighted Text: " + highlightedText);
+        getDictionaryMeaning(highlightedText,web_content);
+    } else {
+        console.log("No text is highlighted.");
     }
 });
-
-// Function to get the selected text
-function getSelectedText() {
-    var text = "";
-    if (window.getSelection) {
-        text = window.getSelection().toString();
-    }
-    return text;
-}
