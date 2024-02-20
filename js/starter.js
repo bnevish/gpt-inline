@@ -3,13 +3,13 @@ const apiUrl = 'https://api.openai.com/v1/chat/completions';
 // Function to fetch custom result from the OpenAI API
 async function fetchCustomResult(text) {
     const apiKey = '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'; // Replace 'YOUR_API_KEY' with your actual API key
-
+    console.log("Section in function:", text);
     const payload = {
         "model": "gpt-3.5-turbo",
         "messages": [
             {
                 "role": "user",
-                "content": `Summarize the following text: ${text}`
+                "content": `Summarize the following : ${text}`
             }
         ],
         "max_tokens": 50,
