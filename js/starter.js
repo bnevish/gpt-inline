@@ -4,15 +4,18 @@ const apiUrl = 'https://api.openai.com/v1/chat/completions';
 async function fetchCustomResult(textToSummarize) {
     const apiKey = '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'; // Replace 'YOUR_API_KEY' with your actual API key
 
-    const prompt = `"Summarize the following text: ${textToSummarize}"`;
-
     const payload = {
-        model: 'gpt-3.5-turbo',
-        prompt: prompt,
-        max_tokens: 50, // Limit summary to 5 lines (assuming 10 words per line)
-        temperature: 0.5,
-        n: 1,
-        stop: ['\n']
+        "model": "gpt-3.5-turbo",
+        "messages": [
+            {
+                "role": "user",
+                "content": `Summarize the following text: ${textToSummarize}`
+            }
+        ],
+        "max_tokens": 50,
+        "temperature": 0.5,
+        "n": 1,
+        "stop": ["\n"]
     };
 
     try {
