@@ -1,12 +1,13 @@
+const apiUrl = 'https://api.openai.com/v1/chat/completions';
+
 // Function to fetch custom result from the OpenAI API
 async function fetchCustomResult(text) {
     const apiKey = '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'; // Replace 'YOUR_API_KEY' with your actual API key
-    const apiUrl = 'https://api.openai.com/v1/chat/completions';
 
     const payload = {
         model: 'gpt-3.5-turbo',
         prompt: text,
-        max_tokens: 150, // Adjust the max_tokens as needed
+        max_tokens: 50, // Limit summary to 5 lines (assuming 10 words per line)
         temperature: 0.5,
         n: 1,
         stop: ['\n']
@@ -34,7 +35,7 @@ async function fetchCustomResult(text) {
     }
 }
 
-// Function to summarize each section of the webpage
+// Function to summarize each major section of the webpage
 async function summarizeWebPage() {
     const url = window.location.href; // Get the current URL
     const response = await fetch(url);
@@ -43,12 +44,17 @@ async function summarizeWebPage() {
     const doc = parser.parseFromString(html, 'text/html');
     const elements = Array.from(doc.querySelectorAll('h1, h2, h3, p, section'));
 
+    let combinedSummary = '';
+
     for (const element of elements) {
         const text = element.textContent.trim();
         const summary = await fetchCustomResult(text);
-        console.log("Section:", text);
-        console.log("Summary:", summary);
+        combinedSummary += summary + '\n';
     }
+
+    // Display the combined summary in the console
+    console.log("Combined Summary:");
+    console.log(combinedSummary);
 }
 
 // Load the summarization when the webpage is loaded
