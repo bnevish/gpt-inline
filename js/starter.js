@@ -51,11 +51,7 @@ function getHistoricalData(highlightedText) {
         "messages": [
             {
                 "role": "user",
-                "content":`need to get the historical details of ${highlightedText} 
-				example
-				1.input:
-				  output:
-				>`
+                "content":`what is the historical details of ${highlightedText}?`
             },
             {
                 "role": "assistant",
