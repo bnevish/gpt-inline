@@ -15,7 +15,7 @@ function getHighlightedText() {
 }
 
 function getDictionaryMeaning(highlightedText) {
-    const apiKey = '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';
+    const apiKey = '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';
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
 
     const dictionaryMeaningPayload = {
@@ -44,7 +44,7 @@ function getDictionaryMeaning(highlightedText) {
 }
 
 function getHistoricalData(highlightedText) {
-    const apiKey = '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';
+    const apiKey = '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';
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
 
     const historicalDataPayload = {
