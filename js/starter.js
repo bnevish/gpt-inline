@@ -52,7 +52,7 @@ function getHistoricalData(highlightedText) {
         "messages": [
             {
                 "role": "user",
-                "content":`what is the historical details of ${highlightedText} based on the context: ${sectioncontext}?`
+                "content":`what is the historical details of ${highlightedText}?`
             },
             {
                 "role": "assistant",
