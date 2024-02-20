@@ -1,7 +1,10 @@
-const apiUrl = 'https://api.openai.com/v1/chat/completions';
-const delayBetweenRequests = 500; // Adjust the delay as needed (in milliseconds)
 
-// Function to fetch custom result from the OpenAI API with rate limiting
+
+const apiUrl = 'https://api.openai.com/v1/chat/completions';
+let delayBetweenRequests = 1000; // Initial delay between requests (in milliseconds)
+let retryCount = 0; // Number of retry attempts
+
+// Function to fetch custom result from the OpenAI API with rate limiting and exponential backoff
 async function fetchCustomResult(text) {
     const apiKey = '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'; // Replace 'YOUR_API_KEY' with your actual API key
 
@@ -15,7 +18,7 @@ async function fetchCustomResult(text) {
     };
 
     try {
-        // Introduce a delay between requests to avoid rate-limiting issues
+        // Introduce a delay between requests with exponential backoff
         await new Promise(resolve => setTimeout(resolve, delayBetweenRequests));
 
         const response = await fetch(apiUrl, {
@@ -35,7 +38,15 @@ async function fetchCustomResult(text) {
         return data.choices[0].text.trim();
     } catch (error) {
         console.error('Error fetching custom result:', error);
-        return 'Error: Failed to fetch custom result';
+        // Exponential backoff: increase delay between requests and retry
+        retryCount++;
+        delayBetweenRequests *= 2; // Double the delay
+        if (retryCount < 5) { // Limit the number of retries
+            console.log(`Retrying (${retryCount})...`);
+            return fetchCustomResult(text);
+        } else {
+            return 'Error: Failed to fetch custom result after multiple retries';
+        }
     }
 }
 
