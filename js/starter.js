@@ -33,7 +33,8 @@ async function fetchCustomResult(text) {
         }
 
         const data = await response.json();
-        return data.choices[0].text.trim();
+        const content = data.choices[0].message.content.trim(); // Accessing the 'content' part directly
+        return content;
     } catch (error) {
         console.error('Error fetching custom result:', error);
         return 'Error: Failed to fetch custom result';
@@ -82,4 +83,3 @@ function getSelectedText() {
     }
     return text;
 }
-
