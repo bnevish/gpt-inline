@@ -1,9 +1,8 @@
 const apiUrl = 'https://api.openai.com/v1/chat/completions';
 
 // Function to fetch custom result from the OpenAI API
-async function fetchCustomResult(text) {
+async function fetchwebcontent(text) {
     const apiKey = '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'; // Replace 'YOUR_API_KEY' with your actual API key
-    console.log("Section in function:", text);
     const payload = {
         "model": "gpt-3.5-turbo",
         "messages": [
@@ -47,7 +46,7 @@ async function summarizeSectionWithHighlightedText() {
     if (highlightedText) {
         const section = findSectionContainingHighlightedText();
         if (section) {
-            const summary = await fetchCustomResult(section.textContent);
+            const summary = await fetchwebcontent(section.textContent);
             console.log("Section:", section.textContent.trim());
             console.log("Summary:", summary);
         } else {
