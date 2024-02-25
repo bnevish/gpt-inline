@@ -117,6 +117,9 @@ function getDictionaryMeaning(highlightedText, summary) {
 
 // Function to get historical data
 function getHistoricalData(highlightedText, summary) {
+    const apiKey = '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';
+    const apiUrl = 'https://api.openai.com/v1/chat/completions';
+
     const historicalDataPayload = {
         "model": "gpt-3.5-turbo",
         "messages": [
