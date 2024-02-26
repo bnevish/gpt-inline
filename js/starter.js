@@ -110,11 +110,15 @@ function getDictionaryMeaning(highlightedText) {
     .then(response => response.json())
     .then(dictionaryMeaningData => {
         console.log("Dictionary Meaning:", dictionaryMeaningData.choices[0].message.content);
-		const webContent = await summarizeSectionWithHighlightedText(highlightedText);
-        console.log("web_content passing:", web_content);
-        getHistoricalData(highlightedText,web_content);
+		summarizeAndProcess(highlightedText); 
     })
     .catch(error => console.error('Error:', error));
+}
+
+async function summarizeAndProcess(highlightedText) {
+    const webContent = await summarizeSectionWithHighlightedText(highlightedText); // Wait for the promise to resolve
+    console.log("web_content:", webContent); // Now you can access the resolved content
+    getHistoricalData(highlightedText, webContent);
 }
 
 function getHistoricalData(highlightedText,web_content) {
