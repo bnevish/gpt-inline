@@ -44,7 +44,7 @@ async function fetchwebcontent(text) {
 async function summarizeSectionWithHighlightedText(highlightedText) {
 
     if (highlightedText) {
-        const section = findSectionContainingHighlightedText();
+        const section = findSectionContainingHighlightedText(highlightedText);
         if (section) {
             const summary = await fetchwebcontent(section.textContent);
             console.log("Section:", section.textContent.trim());
@@ -59,8 +59,7 @@ async function summarizeSectionWithHighlightedText(highlightedText) {
 }
 
 // Function to find the section containing the highlighted text
-function findSectionContainingHighlightedText() {
-    const highlightedText = getSelectedText().trim();
+function findSectionContainingHighlightedText(highlightedText) {
     if (highlightedText) {
         const elements = document.querySelectorAll('h1, h2, h3, p, section');
         for (const element of elements) {
@@ -71,11 +70,6 @@ function findSectionContainingHighlightedText() {
     }
     return null;
 }
-
-
-
-
-
 
 let userContext = null;
 
