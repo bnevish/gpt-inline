@@ -12,6 +12,7 @@ async function fetchwebcontent(text) {
                 "content": `Summarize the following : ${text}`
             }
         ],
+        "max_tokens": 50,
         "temperature": 0.5,
         "n": 1,
         "stop": ["\n"]
