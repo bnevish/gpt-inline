@@ -135,15 +135,14 @@ function getHistoricalData(highlightedText,web_content) {
             },
             {
                 "role": "assistant",
-                "content": `i am developing a product which provides details about the text that they prefer to get a short detailed  historical data.when user provide a word then provide output in the following response format :<short historical details about the word><important dates><relevance with current affairs>.For example if user selects keyword india then below is the result expected : India, one of the world's oldest civilizations, has a rich history spanning thousands of years. It has seen the rise and fall of numerous empires, the spread of religions, and the struggle for independence.
+                "content": `i am developing a product which provides details about the text that they prefer to get a short detailed  historical data.when user provide a word then provide output in the following response format :<short historical details about the word><important dates><historical details reagrding to the context provided>.For example if user selects keyword india in the context: india is good in sports then below is the result expected : India, officially the Republic of India, is a country in South Asia known for its rich cultural heritage and diverse history. It has been home to several ancient civilizations and empires.
 
                 Important Dates:
+                - 15th August 1947: India gained independence from British rule.
+                - 26th January 1950: India adopted its constitution and became a republic.
                 
-                1947: Independence from British rule, marking the birth of the modern Indian nation.
-                1950: Adoption of the Indian Constitution, establishing India as a democratic republic.
-                1991: Economic liberalization reforms launched, leading to significant economic growth and globalization.
-                Current Affairs:
-                India continues to be a vibrant democracy with a booming economy, facing challenges such as regional tensions, economic inequality, and environmental degradation. Recent years have seen advancements in technology, space exploration, and diplomatic relations, positioning India as a key player on the global stage`
+                Historical Details Regarding the Context Provided:
+                India has a long history of sports, with cricket being one of the most popular sports in the country. It has produced many talented athletes who have excelled in various international competitions.`
             }
         ],
         "temperature": 0.6
