@@ -120,7 +120,6 @@ async function summarizeAndProcess(highlightedText) {
     console.log("web_content:", webContent); // Now you can access the resolved content
     getHistoricalData(highlightedText, webContent);
 }
-
 function getHistoricalData(highlightedText,web_content) {
     const apiKey = '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';
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
@@ -134,7 +133,7 @@ function getHistoricalData(highlightedText,web_content) {
             },
             {
                 "role": "assistant",
-                "content": `i am developing a product which provides details about the text that they prefer to get a short detailed  historical data.when user provide a word then provide output in the following response format :<short historical details about the word><important dates><historical details reagrding to the context provided>.For example if user prompt is what is the historical details of india in the following context   india is good in sports then below is the result expected : India, officially the Republic of India, is a country in South Asia known for its rich cultural heritage and diverse history. It has been home to several ancient civilizations and empires.
+                "content": `i am developing a product which provides details about the text that they prefer to get a short detailed  historical data.when user provide a word then provide output in the following response format :<short historical details about the word><important dates><historical details reagrding to the context provided>.For example if user prompt passed is what is the historical details of india in the following context india is good in sports  then below is the result expected : India, officially the Republic of India, is a country in South Asia known for its rich cultural heritage and diverse history. It has been home to several ancient civilizations and empires.
 
                 Important Dates:
                 - 15th August 1947: India gained independence from British rule.
