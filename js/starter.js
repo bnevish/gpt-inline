@@ -110,7 +110,7 @@ function getDictionaryMeaning(highlightedText) {
     .then(response => response.json())
     .then(dictionaryMeaningData => {
         console.log("Dictionary Meaning:", dictionaryMeaningData.choices[0].message.content);
-		const web_content=summarizeSectionWithHighlightedText(highlightedText)
+		const webContent = await summarizeSectionWithHighlightedText(highlightedText);
         console.log("web_content passing:", web_content);
         getHistoricalData(highlightedText,web_content);
     })
