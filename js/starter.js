@@ -111,6 +111,7 @@ function getDictionaryMeaning(highlightedText) {
     .then(dictionaryMeaningData => {
         console.log("Dictionary Meaning:", dictionaryMeaningData.choices[0].message.content);
 		var web_content=summarizeSectionWithHighlightedText(highlightedText)
+        console.log("web_content passing:", web_content);
         getHistoricalData(highlightedText,web_content);
     })
     .catch(error => console.error('Error:', error));
