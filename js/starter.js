@@ -42,14 +42,13 @@ async function fetchwebcontent(text) {
 
 // Function to summarize the section containing the highlighted text
 async function summarizeSectionWithHighlightedText(highlightedText) {
-
     if (highlightedText) {
         const section = findSectionContainingHighlightedText(highlightedText);
         if (section) {
             const summary = await fetchwebcontent(section.textContent);
             console.log("Section:", section.textContent.trim());
             console.log("Summary:", summary);
-			return summary;
+            return summary;
         } else {
             console.log("Could not find section containing the highlighted text.");
         }
@@ -86,6 +85,24 @@ function getHighlightedText() {
     return highlightedText;
 }
 
+function showOptionsPopup(highlightedText) {
+    const option = prompt("Choose an option: 1. Dictionary Meaning, 2. Historical Data, 3. Custom Result");
+
+    switch (option) {
+        case "1":
+            getDictionaryMeaning(highlightedText);
+            break;
+        case "2":
+            summarizeAndProcess(highlightedText);
+            break;
+        case "3":
+            getCustomResult(highlightedText);
+            break;
+        default:
+            console.log("Invalid option selected.");
+    }
+}
+
 function getDictionaryMeaning(highlightedText) {
     const apiKey = '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';
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
@@ -110,7 +127,7 @@ function getDictionaryMeaning(highlightedText) {
     .then(response => response.json())
     .then(dictionaryMeaningData => {
         console.log("Dictionary Meaning:", dictionaryMeaningData.choices[0].message.content);
-		summarizeAndProcess(highlightedText); 
+        summarizeAndProcess(highlightedText); 
     })
     .catch(error => console.error('Error:', error));
 }
@@ -120,6 +137,7 @@ async function summarizeAndProcess(highlightedText) {
     console.log("web_content:", webContent); // Now you can access the resolved content
     getHistoricalData(highlightedText, webContent);
 }
+
 function getHistoricalData(highlightedText,web_content) {
     const apiKey = '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';
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
@@ -172,8 +190,6 @@ function getHistoricalData(highlightedText,web_content) {
     fetchData();
 }
 
-
-
 function getCustomResult(highlightedText) {
     const apiKey = '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';
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
@@ -199,6 +215,7 @@ function getCustomResult(highlightedText) {
         .then(response => response.json())
         .then(customResultData => {
             console.log("Custom Result:", customResultData.choices[0].message.content);
+            alert("Custom Result: " + customResultData.choices[0].message.content);
             continueOrEnd();
         })
         .catch(error => console.error('Error:', error));
@@ -237,7 +254,7 @@ document.addEventListener("mouseup", function() {
     var highlightedText = getHighlightedText();
     if (highlightedText) {
         console.log("Highlighted Text: " + highlightedText);
-        getDictionaryMeaning(highlightedText);
+        showOptionsPopup(highlightedText);
     } else {
         console.log("No text is highlighted.");
     }
