@@ -85,24 +85,6 @@ function getHighlightedText() {
     return highlightedText;
 }
 
-function showOptionsPopup(highlightedText) {
-    const option = prompt("Choose an option: 1. Dictionary Meaning, 2. Historical Data, 3. Custom Result");
-
-    switch (option) {
-        case "1":
-            getDictionaryMeaning(highlightedText);
-            break;
-        case "2":
-            summarizeAndProcess(highlightedText);
-            break;
-        case "3":
-            getCustomResult(highlightedText);
-            break;
-        default:
-            console.log("Invalid option selected.");
-    }
-}
-
 function getDictionaryMeaning(highlightedText) {
     const apiKey = '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';
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
@@ -127,7 +109,7 @@ function getDictionaryMeaning(highlightedText) {
     .then(response => response.json())
     .then(dictionaryMeaningData => {
         console.log("Dictionary Meaning:", dictionaryMeaningData.choices[0].message.content);
-        summarizeAndProcess(highlightedText); 
+        // No need to call summarizeAndProcess here since we only want dictionary meaning
     })
     .catch(error => console.error('Error:', error));
 }
@@ -239,14 +221,20 @@ function getCustomResult(highlightedText) {
     fetchCustomResult();
 }
 
-function showUserContextPrompt(highlightedText) {
-    const contextInput = prompt("Type any other context for the highlighted text:");
-    if (contextInput !== null) {
-        userContext = contextInput;
-        console.log("User context set:", userContext);
-        getCustomResult(highlightedText);
-    } else {
-        console.log("User canceled setting the context.");
+function showOptionsPopup(highlightedText) {
+    const option = prompt("Choose an option:\n1. Dictionary Meaning\n2. Historical Data\n3. Custom Result");
+    switch (option) {
+        case '1':
+            getDictionaryMeaning(highlightedText);
+            break;
+        case '2':
+            summarizeAndProcess(highlightedText);
+            break;
+        case '3':
+            getCustomResult(highlightedText);
+            break;
+        default:
+            console.log("Invalid option.");
     }
 }
 
