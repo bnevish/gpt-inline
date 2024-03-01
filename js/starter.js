@@ -46,7 +46,6 @@ async function summarizeSectionWithHighlightedText(highlightedText) {
         const section = findSectionContainingHighlightedText(highlightedText);
         if (section) {
             const summary = await fetchwebcontent(section.textContent);
-            console.log("Section:", section.textContent.trim());
             console.log("Summary:", summary);
             return summary;
         } else {
@@ -116,7 +115,7 @@ function getDictionaryMeaning(highlightedText) {
 
 async function summarizeAndProcess(highlightedText) {
     const webContent = await summarizeSectionWithHighlightedText(highlightedText); // Wait for the promise to resolve
-    console.log("web_content:", webContent); // Now you can access the resolved content
+     // Now you can access the resolved content
     getHistoricalData(highlightedText, webContent);
 }
 
