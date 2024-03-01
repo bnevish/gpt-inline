@@ -1,55 +1,19 @@
-/* Style for the popup container */
-.popup-container {
+.popup {
     display: none;
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: #ffffff;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    background-color: white;
     padding: 20px;
+    border: 1px solid black;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
     z-index: 9999;
 }
 
-/* Style for the popup content */
-.popup-content {
-    position: relative;
-}
-
-/* Style for the close button */
-.close-btn {
+.close-button {
     position: absolute;
-    top: 5px;
+    top: 10px;
     right: 10px;
-    font-size: 24px;
     cursor: pointer;
-    color: #666;
-}
-
-/* Style for the input field */
-.popup-input {
-    width: 100%;
-    margin-bottom: 10px;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-/* Style for the button */
-.popup-button {
-    width: 100%;
-    padding: 8px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-/* Style for the result */
-.popup-result {
-    margin-top: 10px;
-    font-size: 16px;
 }
