@@ -222,25 +222,27 @@ function getCustomResult(highlightedText, userQuestion) {
 }
 
 function showOptionsPopup(highlightedText) {
-    const option = prompt("Choose an option:\n1. Dictionary Meaning\n2. Historical Data\n3. Custom Result");
-    switch (option) {
-        case '1':
-            getDictionaryMeaning(highlightedText);
-            break;
-        case '2':
-            summarizeAndProcess(highlightedText);
-            break;
-        case '3':
-            const userQuestion = prompt("Enter your question:");
-            if (userQuestion) {
-                getCustomResult(highlightedText, userQuestion);
-            } else {
-                console.log("No question provided.");
-            }
-            break;
-        default:
-            console.log("Invalid option.");
-    }
+    const popup = document.querySelector('.popup');
+    const closeButton = document.querySelector('.close-button');
+    const popupContent = document.querySelector('.popup-content');
+
+    // Populate popup content here if needed
+
+    popup.style.display = 'block'; // Show the popup
+
+    // Close the popup when the close button is clicked
+    closeButton.addEventListener('click', () => {
+        popup.style.display = 'none';
+    });
+
+    // Close the popup when clicking outside of it
+    window.addEventListener('click', (event) => {
+        if (event.target === popup) {
+            popup.style.display = 'none';
+        }
+    });
+
+    // Handle popup actions here
 }
 
 document.addEventListener("mouseup", function() {
