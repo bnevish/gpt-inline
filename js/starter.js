@@ -46,6 +46,7 @@ async function summarizeSectionWithHighlightedText(highlightedText) {
         const section = findSectionContainingHighlightedText(highlightedText);
         if (section) {
             const summary = await fetchwebcontent(section.textContent);
+            console.log("Section:", section.textContent.trim());
             console.log("Summary:", summary);
             return summary;
         } else {
@@ -115,7 +116,7 @@ function getDictionaryMeaning(highlightedText) {
 
 async function summarizeAndProcess(highlightedText) {
     const webContent = await summarizeSectionWithHighlightedText(highlightedText); // Wait for the promise to resolve
-     // Now you can access the resolved content
+    console.log("web_content:", webContent); // Now you can access the resolved content
     getHistoricalData(highlightedText, webContent);
 }
 
@@ -171,7 +172,7 @@ function getHistoricalData(highlightedText,web_content) {
     fetchData();
 }
 
-function getCustomResult(highlightedText) {
+function getCustomResult(highlightedText, userQuestion) {
     const apiKey = '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';
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
 
@@ -179,8 +180,8 @@ function getCustomResult(highlightedText) {
         const customResultPayload = {
             model: 'gpt-3.5-turbo',
             messages: [
-                { role: 'user', content: highlightedText },
-                { role: 'assistant', content: userContext },
+                { role: 'user', content: userQuestion },
+                { role: 'assistant', content: `i am developing a product where user highlights a keyword and user need to get some details about the keyword in his/her context.Here user highlighted the keyword ${highlightedText}`},
             ],
             temperature: 0.7,
         };
@@ -230,7 +231,12 @@ function showOptionsPopup(highlightedText) {
             summarizeAndProcess(highlightedText);
             break;
         case '3':
-            getCustomResult(highlightedText);
+            const userQuestion = prompt("Enter your question:");
+            if (userQuestion) {
+                getCustomResult(highlightedText, userQuestion);
+            } else {
+                console.log("No question provided.");
+            }
             break;
         default:
             console.log("Invalid option.");
