@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", function() {
     // Access the popup element and its style property
+    console.log("started")
     const popup = document.getElementById('popup');
     popup.style.display = 'block'; // Show the popup
 
